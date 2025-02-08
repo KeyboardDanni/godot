@@ -202,6 +202,7 @@ void EditorMainScreen::select(int p_index) {
 	}
 
 	EditorNode::get_singleton()->update_distraction_free_mode();
+	EditorNode::get_singleton()->update_low_latency_mode();
 }
 
 int EditorMainScreen::get_selected_index() const {

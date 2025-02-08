@@ -398,6 +398,24 @@ void EditorNode::_update_vsync_mode() {
 	DisplayServer::get_singleton()->window_set_vsync_mode(window_vsync_mode);
 }
 
+void EditorNode::update_low_latency_mode() {
+	const EditorRenderLatencyMode low_latency_mode = EditorRenderLatencyMode(int(EDITOR_GET("interface/editor/renderer_low_latency_mode")));
+
+	bool is_editor_intensive = (editor_main_screen->get_selected_index() == EditorMainScreen::EditorTable::EDITOR_3D);
+
+	switch (low_latency_mode) {
+		case EditorRenderLatencyMode::RENDER_LATENCY_PRIORITIZE_FRAMERATE:
+			Engine::get_singleton()->set_render_latency_mode(Engine::RenderLatencyMode::RENDER_LATENCY_PRIORITIZE_FRAMERATE);
+			break;
+		case EditorRenderLatencyMode::RENDER_LATENCY_AUTOMATIC:
+			Engine::get_singleton()->set_render_latency_mode(is_editor_intensive ? Engine::RenderLatencyMode::RENDER_LATENCY_PRIORITIZE_FRAMERATE : Engine::RenderLatencyMode::RENDER_LATENCY_PRIORITIZE_LOW_LATENCY);
+			break;
+		case EditorRenderLatencyMode::RENDER_LATENCY_PRIORITIZE_LOW_LATENCY:
+			Engine::get_singleton()->set_render_latency_mode(Engine::RenderLatencyMode::RENDER_LATENCY_PRIORITIZE_LOW_LATENCY);
+			break;
+	}
+}
+
 void EditorNode::_update_from_settings() {
 	_update_title();
 
@@ -864,6 +882,7 @@ void EditorNode::_notification(int p_what) {
 			if (EditorSettings::get_singleton()->check_changed_settings_in_group("interface/editor")) {
 				_update_update_spinner();
 				_update_vsync_mode();
+				update_low_latency_mode();
 				DisplayServer::get_singleton()->screen_set_keep_on(EDITOR_GET("interface/editor/keep_screen_on"));
 			}
 
@@ -8112,6 +8131,8 @@ EditorNode::EditorNode() {
 	add_child(system_theme_timer);
 	system_theme_timer->set_owner(get_owner());
 	system_theme_timer->set_autostart(true);
+
+	update_low_latency_mode();
 }
 
 EditorNode::~EditorNode() {

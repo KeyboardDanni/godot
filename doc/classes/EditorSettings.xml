@@ -883,6 +883,12 @@
 		<member name="interface/editor/project_manager_screen" type="int" setter="" getter="">
 			The preferred monitor to display the project manager.
 		</member>
+		<member name="interface/editor/renderer_low_latency_mode" type="int" setter="" getter="">
+			Sets the low latency mode used by the renderer in the editor. Does not affect the project when run from the editor (this is controlled by [member ProjectSettings.rendering/latency/low_latency_mode]).
+			- [b]Prioritize Framerate[/b] tells the renderer to prioritize higher framerate by allowing the CPU to queue up additional frames before they're rendered by the GPU. This allows the CPU and GPU to work in tandem, improving the framerate and framepacing in complex scenes at the expense of input latency. Use this setting for slower-paced games, or intensive 3D applications including benchmarks and open-world games.
+			- [b]Automatic[/b] prioritizes framerate in the 3D editor and low latency in all other editors.
+			- [b]Prioritize Low Latency[/b] tells the renderer to prioritize lower display latency by limiting how far the CPU is allowed to go ahead of the GPU when queueing frames. This can greatly help with input lag, at the cost of significantly reduced framerate in complex scenes. Use this setting for games with simple graphics where responsive control is important. Your results may vary based on platform, drivers, and scene contents.
+		</member>
 		<member name="interface/editor/save_each_scene_on_quit" type="bool" setter="" getter="">
 			If [code]false[/code], the editor will save all scenes when confirming the [b]Save[/b] action when quitting the editor or quitting to the project list. If [code]true[/code], the editor will ask to save each scene individually.
 		</member>
